@@ -1,21 +1,19 @@
-package dbService;
+package dbservice;
+
+import io.qameta.allure.Step;
+import utils.ConfigLoader;
 
 import java.sql.*;
 
-public class DBService {
-    // Строка подключения к базе данных
-    private static final String CONNECTION_STRING = "jdbc:postgresql://dpg-cn1542en7f5s73fdrigg-a.frankfurt-postgres.render.com/x_clients_xxet";
-    // Имя пользователя для подключения к базе данных
-    private static final String USER = "x_clients_user";
-    // Пароль для подключения к базе данных
-    private static final String PASSWORD = "x7ngHjC1h08a85bELNifgKmqZa8KIR40";
+public class DBServiceEmployee {
 
-    // Метод для добавления нового сотрудника
+    // Method to add a new employee
+    @Step("Adding a new employee")
     public static void addEmployee(String firstName, String middleName, String lastName, String phone, String email,
                                    Date birthdate, int companyId, boolean isActive) {
         String sql = "INSERT INTO employee (first_name, middle_name, last_name, phone, email, birthdate, company_id, is_active) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(ConfigLoader.getConnectionString(), ConfigLoader.getUserDB(), ConfigLoader.getPasswordDB());
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, firstName);
             statement.setString(2, middleName);
@@ -32,10 +30,11 @@ public class DBService {
         }
     }
 
-    // Метод для просмотра всех сотрудников
+    // Method to view all employees
+    @Step("Viewing all employees")
     public static void viewAllEmployees() {
         String sql = "SELECT * FROM employee";
-        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(ConfigLoader.getConnectionString(), ConfigLoader.getUserDB(), ConfigLoader.getPasswordDB());
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
             while (resultSet.next()) {
@@ -48,10 +47,11 @@ public class DBService {
         }
     }
 
-    // Метод для просмотра информации о сотруднике по идентификатору
+    // Method to view employee information by ID
+    @Step("Viewing employee by ID: {employeeId}")
     public static void viewEmployeeById(int employeeId) {
         String sql = "SELECT * FROM employee WHERE id = ?";
-        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(ConfigLoader.getConnectionString(), ConfigLoader.getUserDB(), ConfigLoader.getPasswordDB());
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, employeeId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -67,10 +67,11 @@ public class DBService {
         }
     }
 
-    // Метод для удаления сотрудника по идентификатору
+    // Method to delete employee by ID
+    @Step("Deleting employee by ID: {employeeId}")
     public static void deleteEmployeeById(int employeeId) {
         String sql = "DELETE FROM employee WHERE id = ?";
-        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(ConfigLoader.getConnectionString(), ConfigLoader.getUserDB(), ConfigLoader.getPasswordDB());
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, employeeId);
             int rowsAffected = statement.executeUpdate();
@@ -82,14 +83,14 @@ public class DBService {
 
     public static void main(String[] args) {
         try {
-            // Добавление нового сотрудника
-            addEmployee("Arthur", "Doylee", "Conan", "345-789", "arthurio@gmail.com", Date.valueOf("1859-09-12"), 830, true);
-            // Просмотр списка сотрудников
+            // Adding a new employee
+            addEmployee("Arthur", "Doylee", "Conan", "345-789", "arthurio@gmail.com", Date.valueOf("1859-09-12"), 11039, true);
+            // Viewing the list of employees
             viewAllEmployees();
-            // Поиск сотрудника по идентификатору
-            int employeeId = 1; // Можно указать идентификатор сотрудника для поиска
+            // Viewing employee by ID
+            int employeeId = 1; // You can specify the employee ID for viewing
             viewEmployeeById(employeeId);
-            // Удаление сотрудника по идентификатору
+            // Deleting employee by ID
             deleteEmployeeById(employeeId);
         } catch (Exception e) {
             System.err.println("An error occurred: " + e.getMessage());

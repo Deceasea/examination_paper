@@ -3,57 +3,71 @@ package db;
 import model.Employee;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public interface EmployeeRep {
+
     /**
-     * Создание сотрудника в базе данных.
+     * Creates an employee in the database.
      *
-     * @param employee Сотрудник для добавления.
-     * @return Идентификатор нового сотрудника.
-     * @throws SQLException Если возникает ошибка при работе с базой данных.
+     * @param employee The employee to add.
+     * @return The ID of the new employee.
+     * @throws SQLException If there is an error working with the database.
      */
+    @io.qameta.allure.Step("Creating an employee in the database")
     int createEmployeeDB(Employee employee) throws SQLException;
 
     /**
-     * Получение сотрудника из базы данных по его идентификатору.
+     * Retrieves an employee from the database by their ID.
      *
-     * @param id Идентификатор сотрудника.
-     * @return Сотрудник с указанным идентификатором.
-     * @throws SQLException Если возникает ошибка при работе с базой данных.
+     * @param id The ID of the employee.
+     * @return The employee with the specified ID.
+     * @throws SQLException If there is an error working with the database.
      */
+    @io.qameta.allure.Step("Retrieving an employee by ID from the database")
     Employee getEmployeeByIdDB(int id) throws SQLException;
 
     /**
-     * Удаление сотрудника из базы данных по его идентификатору.
+     * Deletes an employee from the database by their ID.
      *
-     * @param id Идентификатор сотрудника.
-     * @throws SQLException Если возникает ошибка при работе с базой данных.
+     * @param id The ID of the employee.
+     * @throws SQLException If there is an error working with the database.
      */
+    @io.qameta.allure.Step("Deleting an employee by ID from the database")
     void deleteEmployeeByIdDB(int id) throws SQLException;
 
     /**
-     * Создание сотрудника.
+     * Creates an employee.
      *
-     * @param employee Сотрудник для добавления.
-     * @return Идентификатор нового сотрудника.
-     * @throws SQLException Если возникает ошибка при работе с базой данных.
+     * @param employee The employee to add.
+     * @return The ID of the new employee.
+     * @throws SQLException If there is an error working with the database.
      */
+    @io.qameta.allure.Step("Creating an employee")
     int createEmployee(Employee employee) throws SQLException;
 
     /**
-     * Получение сотрудника по его идентификатору.
+     * Retrieves an employee by their ID.
      *
-     * @param id Идентификатор сотрудника.
-     * @return Сотрудник с указанным идентификатором.
-     * @throws SQLException Если возникает ошибка при работе с базой данных.
+     * @param id The ID of the employee.
+     * @return The employee with the specified ID.
+     * @throws SQLException If there is an error working with the database.
      */
+    @io.qameta.allure.Step("Retrieving an employee by ID")
     Employee getEmployeeById(int id) throws SQLException;
 
     /**
-     * Удаление сотрудника по его идентификатору.
+     * Deletes an employee by their ID.
      *
-     * @param id Идентификатор сотрудника.
-     * @throws SQLException Если возникает ошибка при работе с базой данных.
+     * @param id The ID of the employee.
+     * @throws SQLException If there is an error working with the database.
      */
+    @io.qameta.allure.Step("Deleting an employee by ID")
     void deleteEmployeeById(int id) throws SQLException;
+
+    boolean isEmployeeActive(int id) throws SQLException;
+
+    boolean isEmployeeInNonExistentCompany(int companyId) throws SQLException;
+
+    List<Employee> getActiveEmployees() throws SQLException;
 }

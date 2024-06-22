@@ -15,7 +15,6 @@ public class Employee {
     private boolean isActive;
 
     public Employee() {
-        // Устанавливаем значения по умолчанию для нового сотрудника
         this.id = 0;
         this.firstName = "John";
         this.middleName = "Doe";
