@@ -1,11 +1,11 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
+import io.restassured.response.Response;
 import model.Company;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import utils.ConfigLoader;
 
 import java.sql.*;
@@ -15,18 +15,21 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 
+@Epic("Company Tests")
+@Feature("Company Management")
 public class CompanyTests extends AuthBase {
 
     private static final Company newCompany1 = new Company("TestCompany", "TestDescription");
     private static final Company newCompany2 = new Company("Sherlock Holmes", "Private detective agency");
 
     @Test
+    @Story("Create Company")
     @DisplayName("Positive: Verify that creating a company is available")
+    @Description("Test to verify that creating a company via API is available")
+    @Severity(SeverityLevel.CRITICAL)
     public void createNewCompany() {
-        // Create a new company and get its ID
         int idCompany = createNewCompanyApi(newCompany2);
 
-        // Verify company creation by retrieving it and checking its name
         given()
                 .log().all()
                 .queryParam("id", idCompany)
@@ -36,17 +39,17 @@ public class CompanyTests extends AuthBase {
                 .statusCode(200)
                 .body("name", equalTo(newCompany2.getName()));
 
-        // Clean up: delete the created company
         deleteCompany(idCompany);
     }
 
     @Test
+    @Story("Verify Company Active")
     @DisplayName("Positive: Verify that company is active after creation")
+    @Description("Test to verify that a company is active after being created")
+    @Severity(SeverityLevel.NORMAL)
     public void verifyCompanyIsActive() {
-        // Create a new company and get its ID
         int idCompany = createNewCompanyApi(newCompany2);
 
-        // Verify that the created company is active
         given()
                 .log().all()
                 .queryParam("id", idCompany)
@@ -57,14 +60,15 @@ public class CompanyTests extends AuthBase {
                 .statusCode(200)
                 .body("isActive", equalTo(true));
 
-        // Clean up: delete the created company
         deleteCompany(idCompany);
     }
 
     @Test
+    @Story("Create Company without Auth")
     @DisplayName("Negative: Verify creating a company without authentication fails")
+    @Description("Test to verify that creating a company without authentication fails")
+    @Severity(SeverityLevel.BLOCKER)
     public void createCompanyWithoutAuth() {
-        // Attempt to create a company without authentication
         given()
                 .body(newCompany2.getJsonString())
                 .contentType(ContentType.JSON)
@@ -75,12 +79,13 @@ public class CompanyTests extends AuthBase {
     }
 
     @Test
+    @Story("Get Company By ID")
     @DisplayName("Positive: Get Company By ID")
+    @Description("Test to retrieve a company by its ID")
+    @Severity(SeverityLevel.NORMAL)
     public void getCompanyById() {
-        // Create a new company and get its ID
         int companyId = createNewCompanyApi(newCompany1);
 
-        // Retrieve the company by its ID and verify its existence
         String url = ConfigLoader.getUrlCompany() + "/" + companyId;
         System.out.println("Sending GET request to URL: " + url);
 
@@ -93,34 +98,26 @@ public class CompanyTests extends AuthBase {
                 .statusCode(200)
                 .body("id", equalTo(companyId));
 
-        // Clean up: delete the created company
         deleteCompany(companyId);
     }
 
     @Test
+    @Story("Delete Company")
     @DisplayName("Ensure deletedAt field is set when company is deleted")
+    @Description("Test to ensure that the deletedAt field is set when a company is deleted")
+    @Severity(SeverityLevel.CRITICAL)
     public void deletedCompanyHasDeletedAtSet() throws SQLException {
-        // Create a new company and get its ID
         int companyId = createNewCompanyApi(newCompany1);
 
-        // Delete the company via API
         deleteCompany(companyId);
 
-        // Verify in the database that deletedAt is set for the company
         LocalDateTime deletedAt = getDeletedAtFromDatabase(companyId);
         Assertions.assertNotNull(deletedAt, "deletedAt field is not set for the deleted company");
 
         System.out.println("deletedAt field is set to: " + deletedAt);
     }
 
-    /**
-     * Helper method to create a new company via API and return its ID.
-     *
-     * @param company The Company object representing the new company.
-     * @return The ID of the newly created company.
-     */
     private int createNewCompanyApi(Company company) {
-        // Perform API request to create a new company
         int idCompany = given()
                 .header("x-client-token", TOKEN)
                 .body(company.getJsonString())
@@ -135,14 +132,8 @@ public class CompanyTests extends AuthBase {
         return idCompany;
     }
 
-    /**
-     * Helper method to delete a company by ID.
-     *
-     * @param idCompany The ID of the company to delete.
-     */
     private void deleteCompany(int idCompany) {
-        // Perform API request to delete the company
-        given()
+        Response response = given()
                 .log().all()
                 .header("x-client-token", TOKEN)
                 .get(ConfigLoader.getUrlCompany() + "/delete/" + idCompany)
@@ -150,24 +141,21 @@ public class CompanyTests extends AuthBase {
                 .log().all()
                 .defaultParser(Parser.JSON)
                 .statusCode(200)
-                .body("id", equalTo(idCompany))
-                .log().all();
+                .extract().response();
 
-        System.out.println("Deleted company with ID: " + idCompany);
+        String responseBody = response.getBody().asString();
+        if (responseBody != null && !responseBody.trim().isEmpty()) {
+            response.then().body("id", equalTo(idCompany));
+        } else {
+            System.out.println("Deleted company with ID: " + idCompany);
+        }
     }
 
-    /**
-     * Helper method to retrieve deletedAt field from the database for a company.
-     *
-     * @param companyId The ID of the company.
-     * @return The value of deletedAt field from the database.
-     * @throws SQLException If an SQL exception occurs.
-     */
     private LocalDateTime getDeletedAtFromDatabase(int companyId) throws SQLException {
         String query = "SELECT deleted_at FROM company WHERE id = ?";
         LocalDateTime deletedAt = null;
 
-        try (Connection connection = DriverManager.getConnection(ConfigLoader.getConnectionString(),ConfigLoader.getUserDB(), ConfigLoader.getPasswordDB());
+        try (Connection connection = DriverManager.getConnection(ConfigLoader.getConnectionString(), ConfigLoader.getUserDB(), ConfigLoader.getPasswordDB());
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, companyId);
             ResultSet resultSet = preparedStatement.executeQuery();

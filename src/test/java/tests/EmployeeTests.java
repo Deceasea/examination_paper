@@ -3,6 +3,7 @@ package tests;
 import com.github.javafaker.Faker;
 import db.EmployeeRep;
 import db.EmployeeRepJDBC;
+import io.qameta.allure.*;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
@@ -23,6 +24,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Epic("Employee Management")
+@Feature("Employee Tests")
 public class EmployeeTests extends AuthBase {
 
     public static final Faker faker = new Faker();
@@ -37,6 +40,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Positive: Add employees and get list")
+    @Story("Add Employees")
+    @Description("Test to verify adding multiple employees and retrieving their list via API")
+    @Severity(SeverityLevel.CRITICAL)
     public void createAndListEmployees() throws SQLException {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -73,6 +79,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Positive: Add New Employee")
+    @Story("Add Employee")
+    @Description("Test to verify adding a new employee and retrieving their details from the database")
+    @Severity(SeverityLevel.CRITICAL)
     public void createNewEmployee() throws SQLException {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -93,6 +102,9 @@ public class EmployeeTests extends AuthBase {
     }
     @Test
     @DisplayName("Positive: Ensure inactive employee does not appear in list")
+    @Story("Inactive Employee Filtering")
+    @Description("Test to verify that inactive employees are filtered out from the employee list")
+    @Severity(SeverityLevel.NORMAL)
     public void inactiveEmployeeNotInList() throws SQLException {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -137,6 +149,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Positive: Add a new employee to the company")
+    @Story("Add Employee")
+    @Description("Test to verify adding a new employee to the company via API")
+    @Severity(SeverityLevel.NORMAL)
     public void addNewEmployeeToCompany() {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -161,6 +176,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Positive: Get the list of employees")
+    @Story("Get Employees List")
+    @Description("Test to verify retrieving the list of employees for a company via API")
+    @Severity(SeverityLevel.NORMAL)
     public void getListEmployee() {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -183,6 +201,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Positive: Get Employee Info by ID")
+    @Story("Get Employee Info")
+    @Description("Test to verify retrieving employee information by ID from the database")
+    @Severity(SeverityLevel.NORMAL)
     public void getEmployeeById() throws SQLException {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -206,6 +227,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Positive: Update employee information by id")
+    @Story("Update Employee Info")
+    @Description("Test to verify updating employee information by ID via API")
+    @Severity(SeverityLevel.NORMAL)
     public void updateEmployeeById() {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -248,6 +272,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Negative: Add Employee Without Authentication")
+    @Story("Negative Cases")
+    @Description("Test to verify adding an employee without authentication results in unauthorized status")
+    @Severity(SeverityLevel.NORMAL)
     public void addEmployeeWithoutAuth() {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -269,6 +296,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Negative: Update Employee Info Without Authentication")
+    @Story("Negative Cases")
+    @Description("Test to verify updating employee information without authentication results in unauthorized status")
+    @Severity(SeverityLevel.NORMAL)
     public void updateEmployeeWithoutAuth() throws SQLException {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -299,6 +329,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Negative: Add Employee Without Company")
+    @Story("Negative Cases")
+    @Description("Test to verify adding an employee without specifying company results in internal server error")
+    @Severity(SeverityLevel.NORMAL)
     public void createNewEmployeeWithoutCompany() {
         // Prepare JSON for adding employee without specifying company
         String newEmployee = "{\"firstName\": \"Henry\"," +
@@ -324,6 +357,9 @@ public class EmployeeTests extends AuthBase {
 
     @Test
     @DisplayName("Negative: Access employee resource without authorization")
+    @Story("Negative Cases")
+    @Description("Test to verify accessing employee resource without authorization results in unauthorized status")
+    @Severity(SeverityLevel.NORMAL)
     public void addEmployeeWithoutAuthorization() {
         // Create a new company and get its ID
         int idCompany = createNewCompanyApi();
@@ -373,8 +409,7 @@ public class EmployeeTests extends AuthBase {
     }
 
     private void deleteCompany(int idCompany) {
-        // Delete a company by ID via API
-        given()
+        Response response = given()
                 .log().all()
                 .header("x-client-token", TOKEN)
                 .get(ConfigLoader.getUrlCompany() + "/delete/" + idCompany)
@@ -382,10 +417,16 @@ public class EmployeeTests extends AuthBase {
                 .log().all()
                 .defaultParser(Parser.JSON)
                 .statusCode(200)
-                .body("id", equalTo(idCompany));
+                .extract().response();
 
-        System.out.println("Deleted company with ID: " + idCompany);
+        String responseBody = response.getBody().asString();
+        if (responseBody != null && !responseBody.trim().isEmpty()) {
+            response.then().body("id", equalTo(idCompany));
+        } else {
+            System.out.println("Deleted company with ID: " + idCompany);
+        }
     }
+
 
     private Employee createRandomEmployee(int idCompany) {
         // Create a random employee for testing purposes

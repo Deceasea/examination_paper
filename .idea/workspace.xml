@@ -5,16 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5831c4ca-7fe6-4f3c-8894-0645ffc9f1a0" name="Changes" comment="v 1.0">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbservice/DBService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dbservice/DBServiceEmployee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/db/EmployeeRep.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/db/EmployeeRepJDBC.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/model/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/model/Company.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/model/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/model/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/tests/BusinessTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/tests/ContractTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/tests/CompanyTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/CompanyTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/tests/EmployeeTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/EmployeeTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +44,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "last_directory_selection": "C:/Users/Decease/IdeaProjects/examination_paper/src/test/java",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "preferences.general"
   }
 }]]></component>
@@ -57,20 +55,7 @@
       <recent name="C:\Users\Decease\IdeaProjects\examination_paper\src\main" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.EmployeeTests">
-    <configuration name="DBServiceCompany" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="dbservice.DBServiceCompany" />
-      <module name="examination_paper" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="dbservice.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.CompanyTests">
     <configuration name="DBServiceEmployee" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dbservice.DBServiceEmployee" />
       <module name="examination_paper" />
@@ -99,8 +84,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CompanyTests.deletedCompanyHasDeletedAtSet" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="examination_paper" />
+    <configuration name="CompanyTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="http_clients" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="tests.*" />
@@ -109,8 +94,22 @@
       </extension>
       <option name="PACKAGE_NAME" value="tests" />
       <option name="MAIN_CLASS_NAME" value="tests.CompanyTests" />
-      <option name="METHOD_NAME" value="deletedCompanyHasDeletedAtSet" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EmployeeTests (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="http_clients" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.EmployeeTests" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -132,11 +131,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CompanyTests" />
+        <item itemvalue="JUnit.EmployeeTests (1)" />
         <item itemvalue="JUnit.EmployeeTests" />
         <item itemvalue="JUnit.CompanyTests (2)" />
         <item itemvalue="Application.DBServiceEmployee" />
-        <item itemvalue="Application.DBServiceCompany" />
-        <item itemvalue="JUnit.CompanyTests.deletedCompanyHasDeletedAtSet" />
       </list>
     </recent_temporary>
   </component>
